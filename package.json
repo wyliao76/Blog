@@ -1,0 +1,22 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "A blog website developed using Node.js, express.js and MongoDB",
+  "main": "app.js",
+  "scripts": {
+    "start": "Node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wyliao76/Blog.git"
+  },
+  "author": "Will Liao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wyliao76/Blog/issues"
+  },
+  "homepage": "https://github.com/wyliao76/Blog#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
