@@ -1,14 +1,43 @@
-const http = require('http');
+const express = require('express')
+const path = require('path')
+const mongoose = require('mongoose')
 
-const hostname = '127.0.0.1';
-const port = 3000;
+mongoose.connect('mongodb://127.0.0.1/nodeDB')
+let db = mongoose.connection
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
-});
+// check connection
+db.once('open', () => {
+  console.log('connect successful.')
+})
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+// check error
+db.on('error', console.error.bind(console, 'MongoDB connection failed:'));
+
+// init app
+const app = express();
+
+// load model
+let Post = require('./models/post')
+
+// Load view engine
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'pug')
+
+app.get('/', (req, res) => {
+  Post.find({}, (err, posts) =>{
+    if(err){
+      console.log(err)
+    } else {
+      res.render('index', {
+        posts: posts,
+       })
+    }
+  })
+})
+
+// app.get('/', (req, res) => {
+//   res.send('Home page')
+// })
+
+app.listen(3000, () => {
+  console.log("Server running on port: " + 3000)})

@@ -1,0 +1,10 @@
+doctype html
+html
+  head
+    title index
+  body
+    ul
+      each post in posts
+        li #{post.title}
+        li #{post.author}
+        li #{post.body}

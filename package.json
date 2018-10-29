@@ -4,7 +4,8 @@
   "description": "A blog website developed using Node.js, express.js and MongoDB",
   "main": "app.js",
   "scripts": {
-    "start": "Node app"
+    "start": "node app",
+    "dev": "nodemon app"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,10 @@
   },
   "homepage": "https://github.com/wyliao76/Blog#readme",
   "dependencies": {
-    "express": "^4.16.4"
-  }
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.7",
+    "pug": "^2.0.3"
+  },
+  "devDependencies": {}
 }
