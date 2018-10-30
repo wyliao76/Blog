@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 // const postsRouter = require('./routes/posts');
 
-mongoose.connect('mongodb://127.0.0.1/nodeDB')
+mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
 let db = mongoose.connection
 
 // check connection
@@ -29,7 +29,11 @@ app.set('view engine', 'pug')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// static
+app.use(express.static(path.join(__dirname, 'public')))
+
 // app.use('/', postsRouter)
+
 
 // index
 app.get('/', (req, res) => {
@@ -45,18 +49,7 @@ app.get('/', (req, res) => {
  })
 
 
-// get a single post
-app.get('/post/:id', (req, res)=>{
-  Post.findById(req.params.id, (err, post)=>{
-    if (err){
-      console.log(err)
-    } else {
-      res.render('post', {
-        post: post
-      })
-    }
-  })
-})
+
 
 // get request of creating post
 app.get('/post/create', (req, res) =>{
@@ -80,6 +73,20 @@ app.post('/post/create', (req, res) =>{
       return
     } else {
       res.redirect('/')
+    }
+  })
+})
+
+
+// get a single post
+app.get('/post/:id', (req, res)=>{
+  Post.findById(req.params.id, (err, post)=>{
+    if (err){
+      console.log(err)
+    } else {
+      res.render('post', {
+        post: post
+      })
     }
   })
 })
@@ -109,7 +116,7 @@ app.post('/post/edit/:id', (req, res) =>{
     date: new Date(),
     _id: req.params.id,
   })
-  Post.findByIdAndUpdate(req.params.id, post, (err)=>{
+  Post.findOneAndUpdate({"_id":req.params.id}, post, (err)=>{
     if (err){
       console.log(err)
       return
@@ -120,17 +127,30 @@ app.post('/post/edit/:id', (req, res) =>{
 })
 
 
-// delete post
-app.delete('/post/:id', (req, res)=>{
-  Post.deleteOne({_id:req.params.id}, (err)=>{
-    if (err){
+// get delete post
+app.get('/post/delete/:id', (req, res)=>{
+  Post.findById(req.params.id, (err, post) =>{
+    if (err) {
       console.log(err)
     } else {
-      res.send('Success')
-      res.redirect('/')
+      res.render('post_delete', {
+        post: post,
+      })
     }
   })
 })
+
+
+// post delete post
+app.post('/post/delete/:id', (req, res)=>{
+  Post.findOneAndDelete({"_id":req.params.id}, (err)=>{
+    if (err) {
+      console.log(err)
+    }
+    res.redirect('/')
+  })
+})
+
 
 const port = 3000
 
