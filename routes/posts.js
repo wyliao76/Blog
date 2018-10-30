@@ -4,59 +4,31 @@ const router = express.Router()
 // load model
 let Post = require('../models/post')
 
-// index
-router.get('/', (req, res) =>{
-  Post.find({}, (err, posts) =>{
-    if(err){
-      console.log(err)
-    } else {
-      res.render('index', {
-        posts: posts,
-       })
-    }
-  })
-})
+// load controller
+let postController = require('../controllers/postController')
 
+// get index
+router.get('/', postController.index)
 
-// detail page of a post
-router.get('/posts/:id', (req, res) =>{
-  res.send("under construction")
-})
+// get request of creating post
+router.get('/post/create', postController.post_create_get)
 
+// post request of creating post
+router.post('/post/create', postController.post_ceate_post)
 
-// get of create a post
-router.get('/posts/create', (req, res) =>{
-  res.send("under construction")
-})
+// get a single post
+router.get('/post/:id', postController.post)
 
+// get request of editing post
+router.get('/post/edit/:id', postController.post_edit_get)
 
-// post of create a post
-router.post('/posts/create', (req, res) =>{
-  res.send("under construction")
-})
+// post rquest of editing post
+router.post('/post/edit/:id', postController.post_edit_post)
 
+// get delete post
+router.get('/post/delete/:id', postController.post_delete_get)
 
-// get update a post
-router.get('/posts/update/:id', (req, res) =>{
-  res.send("under construction")
-})
-
-
-// post update a post
-router.post('/posts/update/:id', (req, res) =>{
-  res.send("under construction")
-})
-
-
-// get delete a post
-router.get('/posts/delete/:id', (req, res) =>{
-  res.send("under construction")
-})
-
-
-// post delete a post
-router.post('/posts/delete/:id', (req, res) =>{
-  res.send("under construction")
-})
+// post delete post
+router.post('/post/delete/:id', postController.post_delete_post)
 
 module.exports = router
