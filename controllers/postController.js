@@ -2,72 +2,83 @@
 let Post = require('../models/post')
 
 // get index
-exports.index = (req, res, next)=>{
-  Post.find({}, (err, posts) =>{
-    if(err){
-      console.log(err)
+exports.index = async (req, res)=>{
+  try {
+    let posts = await Post.find({})
+    if (!posts) {
+      return res.status(404).send('No posts!')
     } else {
       res.render('index', {
         posts: posts,
-       })
-     }
-   })
- }
+      })
+    }
+  } catch (err) {
+    res.send(err)
+  }
+}
 
 // get create post
-exports.post_create_get = (req, res, next)=>{
-  res.render('post_create', {
-    title:'Create a post'
-  })
+exports.post_create_get = async (req, res)=>{
+  try {
+    res.render('post_create', {
+      title:'Create a post'
+    })
+  } catch (err) {
+    res.send(err)
+  }
 }
 
 // post create post
-exports.post_ceate_post = (req, res, next)=>{
+exports.post_ceate_post = async (req, res)=>{
   let post = new Post({
     title: req.body.title,
     author: req.body.author,
     body: req.body.body,
     date: new Date(),
   })
-  post.save((err)=>{
-    if (err){
-      console.log(err)
-      return
-    } else {
-      res.redirect('/')
-    }
-  })
+  try {
+    await post.save()
+    res.status(200).redirect('/')
+  } catch (err) {
+    res.send(err)
+  }
 }
 
 // get post
-exports.post = (req, res, next)=>{
-  Post.findById(req.params.id, (err, post)=>{
-    if (err){
-      console.log(err)
+exports.post = async (req, res)=>{
+  try {
+    let post = await Post.findOne({_id:req.params.id})
+    if (!post) {
+      return res.status(404).send('No posts!')
     } else {
       res.render('post', {
         post: post
       })
     }
-  })
+  } catch (err) {
+    res.send(err)
+  }
 }
 
 // get edit post
-exports.post_edit_get = (req, res, next)=>{
-  Post.findById(req.params.id, (err, post)=>{
-    if (err){
-      console.log(err)
-    } else {
-      res.render('post_edit', {
-        title:'Edit this post:',
-        post: post
-      })
-    }
-  })
+exports.post_edit_get = async (req, res)=>{
+  try {
+    let post = await Post.findOne({_id:req.params.id})
+    if (!post) {
+      return res.status(404).send('No posts!')
+  } else {
+    res.render('post_edit', {
+      title:'Edit this post:',
+      post: post
+    })
+  }
+} catch (err) {
+  res.send(err)
+  }
 }
 
 // post edit post
-exports.post_edit_post = (req, res, next)=>{
+exports.post_edit_post = async (req, res)=>{
   let post = new Post({
     title: req.body.title,
     author: req.body.author,
@@ -75,35 +86,32 @@ exports.post_edit_post = (req, res, next)=>{
     date: new Date(),
     _id: req.params.id,
   })
-  Post.findOneAndUpdate({"_id":req.params.id}, post, (err)=>{
-    if (err){
-      console.log(err)
-      return
-    } else {
-      res.redirect('/')
-    }
-  })
+  try {
+    await Post.findOneAndUpdate({_id:req.params.id}, post)
+    res.status(201).redirect('/')
+  } catch (err) {
+    res.send(err)
+  }
 }
 
 // get delete post
-exports.post_delete_get = (req, res, next)=>{
-  Post.findById(req.params.id, (err, post) =>{
-    if (err) {
-      console.log(err)
-    } else {
-      res.render('post_delete', {
-        post: post,
-      })
-    }
-  })
+exports.post_delete_get = async (req, res)=>{
+  try {
+    let post = await Post.findOne({_id:req.params.id})
+    res.render('post_delete', {
+      post: post,
+    })
+  } catch (err) {
+    res.send(err)
+  }
 }
 
 // post delete post
-exports.post_delete_post = (req, res, next)=>{
-  Post.findOneAndDelete({"_id":req.params.id}, (err)=>{
-    if (err) {
-      console.log(err)
-    }
-    res.redirect('/')
-  })
+exports.post_delete_post = async (req, res)=>{
+  try {
+    await Post.findOneAndDelete({_id:req.params.id})
+    res.status(200).redirect('/')
+  } catch (err) {
+    res.send(err)
+  }
 }
