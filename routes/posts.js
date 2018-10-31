@@ -28,4 +28,15 @@ router.route('/post/delete/:id')
 .get(postController.post_delete_get)
 .post(postController.post_delete_post)
 
+// API
+router.route('/api/post')
+.get(postController.posts)
+.post(postController.post_ceate_post)
+
+// API post
+router.route('/api/post/:id')
+.get(postController.detail)
+.put(postController.post_edit_post)
+.delete(postController.post_delete_post)
+
 module.exports = router

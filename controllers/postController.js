@@ -115,3 +115,31 @@ exports.post_delete_post = async (req, res)=>{
     res.send(err)
   }
 }
+
+
+// API index
+exports.posts = async (req, res) => {
+  try {
+    let posts = await Post.find({})
+    if (!posts) {
+      return res.status(404).send('No posts!')
+    }
+    res.send(posts)
+  } catch (err) {
+    res.send(err)
+  }
+}
+
+
+// API get post
+exports.detail = async (req, res) => {
+  try {
+    let post = await Post.findOne({_id:req.params.id})
+    if (!post) {
+      return res.status(404).send('No posts!')
+    }
+    res.send(post)
+  } catch (err) {
+    res.send(err)
+  }
+}
