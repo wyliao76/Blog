@@ -9,7 +9,7 @@ header
     .container
       .row
         .col-sm-8.col-md-7.py-4
-          h4.text-white About
+          h4.text-white Poster board
           p.text-muted
             | Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.
         .col-sm-4.offset-md-1.py-4
@@ -22,14 +22,16 @@ header
             li
               a.text-white(href='#') Email me
   .navbar.navbar-dark.bg-dark.shadow-sm
-    .container.d-flex.justify-content-between
-      a.navbar-brand.d-flex.align-items-center(href='/')
+    .container
+      a.navbar-brand(href='/')
         svg.mr-2(xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewbox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round')
           path(d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z')
           circle(cx='12' cy='13' r='4')
-        strong Album
-      a.navbar-nav.nav-item.active.nav-link.text-white(href='/post/create')
-        strong| Post
+        strong| Poster board
+      a.nav-item.active.nav-link.text-white(href='/post/create')
+        strong| Create Post
+      a.nav-item.active.nav-link.text-white(href='/user/login')
+        strong| Login
       button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarHeader' aria-controls='navbarHeader' aria-expanded='false' aria-label='Toggle navigation')
         span.navbar-toggler-icon
           
