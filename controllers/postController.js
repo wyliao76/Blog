@@ -1,5 +1,6 @@
 // load model
 const Post = require('../models/post')
+const User = require('../models/user')
 const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 
@@ -38,13 +39,14 @@ body('author', 'Author must not be empty.').isLength({ min: 1 }).trim(),
 body('body', 'body must not be empty.').isLength({ min: 1 }).trim(),
 sanitizeBody('*').trim().escape(),
  async (req, res, next)=>{
-  let errors = validationResult(req);
-  let post = new Post({
+  let errors = validationResult(req)
+  let post = await new Post({
     title: req.body.title,
     author: req.body.author,
     body: req.body.body,
     date: new Date(),
   })
+
   if (!errors.isEmpty()) {
     res.render('post_create', {post:post, errors: errors.array()})
   } else {

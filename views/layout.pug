@@ -3,37 +3,33 @@ head
   meta(charset='utf-8')
   meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
   link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous')
-  title title
+  title Poster Board
 header
-  #navbarHeader.collapse.bg-dark
-    .container
-      .row
-        .col-sm-8.col-md-7.py-4
-          h4.text-white Poster board
-          p.text-muted
-            | Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.
-        .col-sm-4.offset-md-1.py-4
-          h4.text-white Contact
-          ul.list-unstyled
-            li
-              a.text-white(href='#') Follow on Twitter
-            li
-              a.text-white(href='#') Like on Facebook
-            li
-              a.text-white(href='#') Email me
-  .navbar.navbar-dark.bg-dark.shadow-sm
+  nav.navbar.navbar-expand-sm.navbar-dark.bg-dark
     .container
       a.navbar-brand(href='/')
-        svg.mr-2(xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewbox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round')
-          path(d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z')
-          circle(cx='12' cy='13' r='4')
-        strong| Poster board
-      a.nav-item.active.nav-link.text-white(href='/post/create')
-        strong| Create Post
-      a.nav-item.active.nav-link.text-white(href='/user/login')
-        strong| Login
-      button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarHeader' aria-controls='navbarHeader' aria-expanded='false' aria-label='Toggle navigation')
+        Strong| Poster Board
+      button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbar' aria-controls='navbar' aria-expanded='false' aria-label='Toggle navigation')
         span.navbar-toggler-icon
+      #navbar.collapse.navbar-collapse
+        .navbar-nav
+          a.nav-item.nav-link.active(href='/')
+            Strong| Home 
+            span.sr-only (current)
+          a.nav-item.nav-link.active(href='/post/create')
+            Strong| Create Post
+      .navbar-nav.justify-content-end
+        if user
+          li 
+            a.nav-item.nav-link.active(href='/user/logout')
+              Strong| Logout
+        else
+          li
+            a.nav-item.nav-link.active(href='/user/login')
+              Strong| Login
+          li
+            a.nav-item.nav-link.active(href='/user/register')
+              Strong| Sign up
           
   .container
     .row
@@ -49,14 +45,9 @@ br
 footer.text-muted
   .container
     p.float-right
-      a(href='#') Back to top
-    p Album example is &copy; Bootstrap, but please download and customize it for yourself!
-    p
-      | New to Bootstrap? 
-      a(href='../../') Visit the homepage
-      |  or read our 
-      a(href='../../getting-started/') getting started guide
-      | .
+      a(href='/') Back to top
+    p.text-center &copy; 2018, Will Liao
+
 script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous')
 script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js' integrity='sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49' crossorigin='anonymous')
 script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js' integrity='sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy' crossorigin='anonymous')

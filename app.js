@@ -2,10 +2,12 @@ const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
 const postRouter = require('./routes/posts');
+const userRouter = require('./routes/users');
 const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 const flash = require('connect-flash-plus')
 const session = require('express-session')
+const passport = require('passport')
 
 mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
 let db = mongoose.connection
@@ -23,6 +25,7 @@ const app = express();
 
 // load model
 const Post = require('./models/post')
+const User = require('./models/user')
 
 // Load view engine
 app.set('views', path.join(__dirname, 'views'))
@@ -39,8 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({
   secret: 'ThISAsECRet',
   resave: true,
-  saveUninitialized: true,
-  cookie: { maxAge: 1000 },
+  saveUninitialized: true
 }))
 
 // flash
@@ -50,8 +52,20 @@ app.use(function (req, res, next) {
   next()
 })
 
+// Passport Config
+require('./config/passport')(passport)
+// load passport
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.get('*', function(req, res, next){
+  res.locals.user = req.user || null
+  next()
+})
+
 // load router
 app.use('/', postRouter)
+app.use('/user/', userRouter)
 
 const port = process.env.PORT || 3000
 
