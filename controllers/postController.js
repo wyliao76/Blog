@@ -35,22 +35,21 @@ exports.post_create_get = async (req, res)=>{
 // post create post
 exports.post_ceate_post = [
 body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
-body('author', 'Author must not be empty.').isLength({ min: 1 }).trim(),
 body('body', 'body must not be empty.').isLength({ min: 1 }).trim(),
 sanitizeBody('*').trim().escape(),
- async (req, res, next)=>{
+ async (req, res)=>{
   let errors = validationResult(req)
-  let post = await new Post({
-    title: req.body.title,
-    author: req.body.author,
-    body: req.body.body,
-    date: new Date(),
-  })
 
   if (!errors.isEmpty()) {
     res.render('post_create', {post:post, errors: errors.array()})
   } else {
   try {
+    let post = await new Post({
+      title: req.body.title,
+      author: req.user._id,
+      body: req.body.body,
+      date: new Date()
+    })
     await post.save()
     req.flash('success', 'Create post successful!')
     res.status(200).redirect('/')
@@ -60,15 +59,17 @@ sanitizeBody('*').trim().escape(),
 }
 }]
 
-// get post
+// get a single post
 exports.post = async (req, res)=>{
   try {
     let post = await Post.findOne({_id:req.params.id})
+    let author = await User.findOne({_id:post.author})
     if (!post) {
       return res.status(404).send('No posts!')
     } else {
       res.render('post', {
-        post: post
+        post: post,
+        author: author.username,
       })
     }
   } catch (err) {
@@ -80,6 +81,10 @@ exports.post = async (req, res)=>{
 exports.post_edit_get = async (req, res)=>{
   try {
     let post = await Post.findOne({_id:req.params.id})
+    if (post.author != req.user._id){
+      req.flash('danger', 'Hey you cannot go there!')
+       return res.redirect('/')
+    }
     if (!post) {
       return res.status(404).send('No posts!')
   } else {
@@ -96,7 +101,6 @@ exports.post_edit_get = async (req, res)=>{
 // post edit post
 exports.post_edit_post = [
 body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
-body('author', 'Author must not be empty.').isLength({ min: 1 }).trim(),
 body('body', 'body must not be empty.').isLength({ min: 1 }).trim(),
 sanitizeBody('*').trim().escape(),
 async (req, res, next)=>{
@@ -125,6 +129,10 @@ async (req, res, next)=>{
 exports.post_delete_get = async (req, res)=>{
   try {
     let post = await Post.findOne({_id:req.params.id})
+    if (post.author != req.user._id){
+      req.flash('danger', 'Hey you cannot go there!')
+       return res.redirect('/')
+    }
     res.render('post_delete', {
       post: post,
     })

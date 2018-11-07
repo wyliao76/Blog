@@ -5,10 +5,8 @@ block content
   form(method='POST', action='')
     #form-group
       label Title:
-      input.title.form-control(name='title', type='text', value=(undefined===post ? '' : post.title))
-    #form-group
-      label Author:
-      input.author.form-control(name='author', type='text', value=(undefined===post ? '' : post.author))
+      input.form-control(name='title', type='text', value=(undefined===post ? '' : post.title))
+        
     #form-group
       label Body:
       textarea.form-control(name='body')=undefined===post ? '' : post.body

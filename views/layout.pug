@@ -16,10 +16,13 @@ header
           a.nav-item.nav-link.active(href='/')
             Strong| Home 
             span.sr-only (current)
-          a.nav-item.nav-link.active(href='/post/create')
-            Strong| Create Post
+          if user
+            a.nav-item.nav-link.active(href='/post/create')
+              Strong| Create Post
       .navbar-nav.justify-content-end
         if user
+          li
+            h3.text-white Hello #{user.username}, 
           li 
             a.nav-item.nav-link.active(href='/user/logout')
               Strong| Logout
