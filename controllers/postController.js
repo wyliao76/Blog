@@ -36,7 +36,9 @@ exports.post_create_get = async (req, res)=>{
 exports.post_ceate_post = [
 body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
 body('body', 'body must not be empty.').isLength({ min: 1 }).trim(),
-sanitizeBody('*').trim().escape(),
+
+// I don't know how to decode the sanitized data
+// sanitizeBody('*').escape(),
  async (req, res)=>{
   let errors = validationResult(req)
 
@@ -52,6 +54,7 @@ sanitizeBody('*').trim().escape(),
     })
     await post.save()
     req.flash('success', 'Create post successful!')
+    console.log(post)
     res.status(200).redirect('/')
   } catch (err) {
     res.json({err:err.message})
@@ -102,7 +105,9 @@ exports.post_edit_get = async (req, res)=>{
 exports.post_edit_post = [
 body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
 body('body', 'body must not be empty.').isLength({ min: 1 }).trim(),
-sanitizeBody('*').trim().escape(),
+
+// I don't know how to decode the sanitized data
+// sanitizeBody('*').escape(),
 async (req, res, next)=>{
   let errors = validationResult(req);
   let post = new Post({

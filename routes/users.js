@@ -8,9 +8,6 @@ const passport = require('passport')
 // load model
 let User = require('../models/user')
 
-// load controller
-let userController = require('../controllers/userController')
-
 // get register
 router.get('/register', (req, res) => {
   res.render('register')
@@ -81,6 +78,15 @@ router.get('/logout', (req, res) => {
   req.logout()
   req.flash('success', 'You are logged out')
   res.redirect('/user/login')
+})
+
+router.get('/profile', async (req, res)=>{
+  try {
+    let user = await User.findOne({_id:req.user})
+    res.render('profile', {user:user})
+  } catch (err) {
+    res.send(err)
+  }
 })
 
 // check if user is authenticated

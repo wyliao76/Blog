@@ -22,7 +22,10 @@ header
       .navbar-nav.justify-content-end
         if user
           li
-            h3.text-white Hello #{user.username}, 
+            h3.text-white Hello #{user.username},
+          li
+            a.nav-item.nav-link.active(href='/user/profile')
+              Strong| Profile
           li 
             a.nav-item.nav-link.active(href='/user/logout')
               Strong| Logout
