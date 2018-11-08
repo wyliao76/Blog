@@ -1,9 +1,9 @@
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
-
-
-var passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy;
+const Keys = require('./Keys')
+const passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy
+  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 
 module.exports = function(passport){
   passport.use(new LocalStrategy(
@@ -24,6 +24,19 @@ module.exports = function(passport){
       });
     }
   ));
+
+  passport.use(new GoogleStrategy({
+      clientID: Keys.GOOGLE_CLIENT_ID,
+      clientSecret: Keys.GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://www.example.com/auth/google/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+         User.findOrCreate({ googleId: profile.id }, function (err, user) {
+           return done(err, user);
+         });
+    }
+  ));
+
   passport.serializeUser(function(user, done) {
     done(null, user.id);
   });
