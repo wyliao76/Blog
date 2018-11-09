@@ -8,6 +8,7 @@ let UserOAuthSchema = mongoose.Schema(
     email: {type:String, max: 100},
     firstName: String,
     lastName: String,
+    portrait: String,
   }
 )
 

@@ -1,16 +1,17 @@
 const UserOauth = require('../models/user_oauth')
 const Keys = require('./Keys')
 const passport = require('passport')
-  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+  , FacebookStrategy = require('passport-facebook').Strategy
 
 
-passport.use(new GoogleStrategy({
-    clientID: Keys.GOOGLE_CLIENT_ID,
-    clientSecret: Keys.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback"
+passport.use(new FacebookStrategy({
+    clientID: Keys.FACEBOOK_APP_ID,
+    clientSecret: Keys.FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:3000/auth/facebook/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
+      console.log(profile)
       let user = await UserOauth.findOne({ userId: profile.id })
       if (user) {
         done(null, user)

@@ -4,7 +4,6 @@ const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
-const passportGoogle = require('../config/passport_google')
 
 // load model
 let User = require('../models/user')
@@ -23,7 +22,9 @@ router.post('/register', [
   .custom((value, { req }) => {
   if (value !== req.body.password) {
     throw new Error('Confirm password does not match password')
-  } else {return value}
+  } else {
+    return value
+  }
 }),
   body('firstName', 'First name must not be empty.').isLength({ min: 1 }).trim(),
   body('lastName', 'Last name must not be empty.').isLength({ min: 1 }).trim(),
@@ -87,17 +88,6 @@ router.get('/profile', isAuthed, async (req, res) => {
   } catch (err) {
     res.send(err)
   }
-})
-
-// login with Google
-router.get('/google', passportGoogle.authenticate('google', {
-  scope:['profile']
-}))
-
-// google callback
-router.get('/google/callback', passportGoogle.authenticate('google', {
-   failureRedirect: '/user/login' }), (req, res) => {
-  res.redirect('/')
 })
 
 // check authentication

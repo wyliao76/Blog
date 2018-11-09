@@ -1,8 +1,9 @@
 const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
-const postRouter = require('./routes/posts');
-const userRouter = require('./routes/users');
+const postRouter = require('./routes/posts')
+const userRouter = require('./routes/users')
+const authRouter = require('./routes/auth')
 const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 const flash = require('connect-flash-plus')
@@ -67,6 +68,7 @@ app.get('*', (req, res, next) => {
 // load router
 app.use('/', postRouter)
 app.use('/user/', userRouter)
+app.use('/auth/', authRouter)
 
 const port = process.env.PORT || 3000
 
