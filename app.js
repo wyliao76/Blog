@@ -8,6 +8,7 @@ const { sanitizeBody } = require('express-validator/filter')
 const flash = require('connect-flash-plus')
 const session = require('express-session')
 const passport = require('passport')
+const Keys = require('./config/keys')
 
 mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
 let db = mongoose.connection
@@ -40,25 +41,25 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // session
 app.use(session({
-  secret: 'ThISAsECRet',
+  secret: Keys.SESSION_SECRET,
   resave: true,
   saveUninitialized: true
 }))
 
 // flash
 app.use(flash());
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   res.locals.messages = require('express-messages')(req, res)
   next()
 })
 
 // Passport Config
-require('./config/passport')(passport)
+require('./config/passport')
 // load passport
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.get('*', function(req, res, next){
+app.get('*', (req, res, next) => {
   res.locals.user = req.user || null
   next()
 })

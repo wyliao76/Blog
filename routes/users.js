@@ -4,6 +4,7 @@ const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
+const passportGoogle = require('../config/passport_google')
 
 // load model
 let User = require('../models/user')
@@ -60,7 +61,7 @@ router.post('/register', [
 })
 
 // login
-router.get('/login', (req, res) =>{
+router.get('/login', (req, res) => {
   res.render('login')
 })
 
@@ -80,14 +81,34 @@ router.get('/logout', (req, res) => {
   res.redirect('/user/login')
 })
 
-router.get('/profile', async (req, res)=>{
+router.get('/profile', isAuthed, async (req, res) => {
   try {
-    let user = await User.findOne({_id:req.user})
-    res.render('profile', {user:user})
+    res.render('profile', {user:req.user})
   } catch (err) {
     res.send(err)
   }
 })
+
+// login with Google
+router.get('/google', passportGoogle.authenticate('google', {
+  scope:['profile']
+}))
+
+// google callback
+router.get('/google/callback', passportGoogle.authenticate('google', {
+   failureRedirect: '/user/login' }), (req, res) => {
+  res.redirect('/')
+})
+
+// check authentication
+function isAuthed(req, res, next){
+  if (req.isAuthenticated()){
+    return next()
+  } else {
+    req.flash('danger', 'Login required.')
+    res.redirect('/user/login')
+  }
+}
 
 // check if user is authenticated
 router.get('/checkauth', function(req,res,next){
@@ -99,11 +120,9 @@ router.get('/checkauth', function(req,res,next){
       })
 
 }, function(req, res){
-
     res.status(200).json({
         status: 'Login successful!'
     });
 });
-
 
 module.exports = router

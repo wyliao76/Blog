@@ -1,6 +1,7 @@
 // load model
 const Post = require('../models/post')
 const User = require('../models/user')
+const UserOauth = require('../models/user_oauth')
 const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 
@@ -67,6 +68,9 @@ exports.post = async (req, res)=>{
   try {
     let post = await Post.findOne({_id:req.params.id})
     let author = await User.findOne({_id:post.author})
+    if (!author) {
+      author = await UserOauth.findOne({_id:post.author})
+    }
     if (!post) {
       return res.status(404).send('No posts!')
     } else {
