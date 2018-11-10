@@ -55,7 +55,6 @@ body('body', 'body must not be empty.').isLength({ min: 1 }).trim(),
     })
     await post.save()
     req.flash('success', 'Create post successful!')
-    console.log(post)
     res.status(200).redirect('/')
   } catch (err) {
     res.json({err:err.message})

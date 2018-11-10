@@ -8,6 +8,8 @@ const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 const flash = require('connect-flash-plus')
 const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
+const RedisStore = require('connect-redis')(session)
 const passport = require('passport')
 const Keys = require('./config/keys')
 
@@ -43,8 +45,11 @@ app.use(express.static(path.join(__dirname, 'public')))
 // session
 app.use(session({
   secret: Keys.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true
+  resave: false,
+  saveUninitialized: false,
+  cookie: {maxAge: 10 * 60 * 1000},
+  store: new MongoStore({mongooseConnection: db})
+  // store: new RedisStore({host:'localhost', port:6379, client: Keys.REDIS_CLIENT})
 }))
 
 // flash

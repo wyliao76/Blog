@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const passportGoogle = require('../config/passport_google')
 const passportFacebook = require('../config/passport_facebook')
+const passportGitHub = require('../config/passport_github')
 
 
 // login with Google
@@ -26,12 +27,15 @@ router.get('/facebook/callback', passportFacebook.authenticate('facebook', {
   res.redirect('/')
 })
 
+// login with GitHub
+router.get('/github', passportGitHub.authenticate('github', {
+  scope:['profile']
+}))
 
-function checkLoginState() {
-  FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-  });
-}
-
+// GitHub callback
+router.get('/github/callback', passportGitHub.authenticate('github', {
+   failureRedirect: '/user/login' }), (req, res) => {
+  res.redirect('/')
+})
 
 module.exports = router
