@@ -1,5 +1,5 @@
 const UserOauth = require('../models/user_oauth')
-const Keys = require('./Keys')
+const Keys = require('./keys')
 const passport = require('passport')
   , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 

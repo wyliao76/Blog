@@ -12,9 +12,11 @@ const MongoStore = require('connect-mongo')(session)
 const RedisStore = require('connect-redis')(session)
 const passport = require('passport')
 const Keys = require('./config/keys')
+const helmet = require('helmet')
+const compression = require('compression')
 
-mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
-// mongoose.connect('mongodb://mongo:27017/nodeDB', { useNewUrlParser: true })
+// mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
+mongoose.connect('mongodb://mongo:27017/nodeDB', { useNewUrlParser: true })
 let db = mongoose.connection
 
 // check connection
@@ -26,7 +28,10 @@ db.once('open', () => {
 db.on('error', console.error.bind(console, 'MongoDB connection failed:'));
 
 // init app
-const app = express();
+const app = express()
+
+app.use(helmet())
+app.use(compression())
 
 // load model
 const Post = require('./models/post')

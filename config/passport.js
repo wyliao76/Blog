@@ -1,7 +1,7 @@
 const User = require('../models/user')
 const UserOauth = require('../models/user_oauth')
 const bcrypt = require('bcryptjs')
-const Keys = require('./Keys')
+const Keys = require('./keys')
 const passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy
 
