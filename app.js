@@ -14,6 +14,7 @@ const passport = require('passport')
 const Keys = require('./config/keys')
 
 mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
+// mongoose.connect('mongodb://mongo:27017/nodeDB', { useNewUrlParser: true })
 let db = mongoose.connection
 
 // check connection
