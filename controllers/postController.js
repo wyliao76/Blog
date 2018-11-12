@@ -69,16 +69,15 @@ exports.post = async (req, res) => {
     let author = await User.findOne({_id:post.author})
     if (!author) {
       author = await UserOauth.findOne({_id:post.author})
-    } else {
-      res.render('post', {
-        post: post,
-        author: author.username,
-      })
     }
-  } catch (err) {
-    res.send(err)
+    res.render('post', {
+      post: post,
+      author: author.username,
+      })
+    } catch (err) {
+      res.send(err)
+    }
   }
-}
 
 // get edit post
 exports.post_edit_get = async (req, res) => {
