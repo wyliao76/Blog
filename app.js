@@ -14,9 +14,10 @@ const passport = require('passport')
 const Keys = require('./config/keys')
 const helmet = require('helmet')
 const compression = require('compression')
+require('dotenv').config()
 
 // mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
-mongoose.connect('mongodb://mongo:27017/nodeDB', { useNewUrlParser: true })
+mongoose.connect('mongodb://Will:Ethane168@ds159273.mlab.com:59273/nodedb', { useNewUrlParser: true })
 let db = mongoose.connection
 
 // check connection
