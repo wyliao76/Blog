@@ -1,7 +1,8 @@
 extends layout
 
 block content
-  img(src = user.portrait)
-  h4 User name: #{user.username}
-  h4 Email: #{user.email}
-  h4 Name: #{user.firstName} #{user.lastName}
+  .col-md-4
+    img(src = user.portrait)
+    h4 User name: #{user.username}
+    h4 Email: #{user.email}
+    h4 Name: #{user.firstName} #{user.lastName}

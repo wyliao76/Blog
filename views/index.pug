@@ -1,7 +1,11 @@
 extends layout
 
 block content
-  ul
-    each post in posts
-      li
-        a(href='/post/'+post._id) #{post.title}
+  each post in posts
+    .col-md-6.col-lg-4
+      .card
+        img.card-img-top.img-fluid(src="/image/MilkyWay.jpg")
+        .card-body
+          h3.card-title
+            a(href='/post/'+post._id) #{post.title}
+          p #{post.body}

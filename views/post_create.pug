@@ -1,14 +1,15 @@
 extends layout
 
 block content
-  h1 Create a post
-  form(method='POST', action='')
-    #form-group
-      label Title:
-      input.form-control(name='title', type='text', value=(undefined===post ? '' : post.title))
-        
-    #form-group
-      label Body:
-      textarea.form-control(name='body')=undefined===post ? '' : post.body
-    br
-    input.btn.btn-primary(type='submit', value='submit')
+  .col-md-4
+    h1 Create a post
+    form(method='POST', action='')
+      #form-group
+        label Title:
+        input.form-control(name='title', type='text', value=(undefined===post ? '' : post.title))
+          
+      #form-group
+        label Body:
+        textarea.form-control(name='body')=undefined===post ? '' : post.body
+      br
+      input.btn.btn-primary(type='submit', value='submit')

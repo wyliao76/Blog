@@ -1,14 +1,15 @@
 extends layout
 
 block content
-  h1 #{post.title}
-  h5 &emsp; by #{author}
-  hr
-  p #{post.body}
-  br
-  h4 #{post.date}
-  hr
-  if user
-    if user._id == post.author
-      a.btn.btn-default(href='/post/edit/'+post._id) Edit
-      a.btn.btn-danger(href='/post/delete/'+post._id,) DELETE
+  .col-md-4
+    h1 #{post.title}
+    h5 &emsp; by #{author}
+    hr
+    p #{post.body}
+    br
+    h4 #{post.date}
+    hr
+    if user
+      if user._id == post.author
+        a.btn.btn-default(href='/post/edit/'+post._id) Edit
+        a.btn.btn-danger(href='/post/delete/'+post._id,) DELETE

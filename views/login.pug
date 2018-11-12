@@ -1,24 +1,25 @@
 extends layout
 
 block content
-  h1 Login
-  form(method='POST', action='')
-    #form-group
-      label Username:
-      input.form-control(name='username', type='text')
-    #form-group
-      label Password:
-      input.form-control(name='password', type='password')
-    br
-    input.btn.btn-primary(type='submit', value='submit')
-    a(href='/user/register')  or
-      Strong|  Sign up
-  
-  br  
-  h5 Or login with 
-  a.btn.btn-danger(href='/auth/google')
-    Strong Google
-  a.btn.btn-primary(href='/auth/facebook')
-      Strong Facebook
-  a.btn.btn-secondary(href='/auth/github')
-      Strong GitHub
+  .col-md-4
+    h1 Login
+    form(method='POST', action='')
+      #form-group
+        label Username:
+        input.form-control(name='username', type='text')
+      #form-group
+        label Password:
+        input.form-control(name='password', type='password')
+      br
+      input.btn.btn-primary(type='submit', value='submit')
+      a(href='/user/register')  or
+        Strong|  Sign up
+    
+    br  
+    h5 Or login with 
+    a.btn.btn-danger(href='/auth/google')
+      Strong Google
+    //- a.btn.btn-primary(href='/auth/facebook')
+    //-     Strong Facebook
+    a.btn.btn-secondary(href='/auth/github')
+        Strong GitHub

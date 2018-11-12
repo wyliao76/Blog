@@ -1,10 +1,11 @@
 extends layout
 
 block content
-  p You are deleting this post:
-  p #{post.title}
-  form(method='POST' action='')
-      div.form-group
-        input.id.form-control(type='hidden',name='id', required='true', value=post._id )
+  .col-md-4
+    p You are deleting this post:
+    p #{post.title}
+    form(method='POST' action='')
+        div.form-group
+          input.id.form-control(type='hidden',name='id', required='true', value=post._id )
 
-      button.btn.btn-primary(type='submit') Delete
+        button.btn.btn-primary(type='submit') Delete
