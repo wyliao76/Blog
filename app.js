@@ -17,7 +17,7 @@ const compression = require('compression')
 require('dotenv').config()
 
 // mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
 let db = mongoose.connection
 
 // check connection
