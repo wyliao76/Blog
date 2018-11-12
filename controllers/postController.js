@@ -187,3 +187,12 @@ exports.detail = async (req, res) => {
     res.send(err)
   }
 }
+
+exports.isAuthed = (req, res, next) => {
+  if (req.isAuthenticated()){
+    return next()
+  } else {
+    req.flash('danger', 'Login required.')
+    res.redirect('/user/login')
+  }
+}

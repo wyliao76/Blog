@@ -8,6 +8,9 @@ const passport = require('passport')
 // load model
 let User = require('../models/user')
 
+// load controller
+let postController = require('../controllers/postController')
+
 // get register
 router.get('/register', (req, res) => {
   res.render('register')
@@ -82,23 +85,13 @@ router.get('/logout', (req, res) => {
   res.redirect('/user/login')
 })
 
-router.get('/profile', isAuthed, async (req, res) => {
+router.get('/profile', postController.isAuthed, async (req, res) => {
   try {
     res.render('profile', {user:req.user})
   } catch (err) {
     res.send(err)
   }
 })
-
-// check authentication
-function isAuthed(req, res, next){
-  if (req.isAuthenticated()){
-    return next()
-  } else {
-    req.flash('danger', 'Login required.')
-    res.redirect('/user/login')
-  }
-}
 
 // check if user is authenticated
 router.get('/checkauth', function(req,res,next){

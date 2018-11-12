@@ -12,7 +12,7 @@ router.get('/', postController.index)
 
 // create post
 router.route('/post/create')
-.get(isAuthed, postController.post_create_get)
+.get(postController.isAuthed, postController.post_create_get)
 .post(postController.post_ceate_post)
 
 // get a single post
@@ -20,12 +20,12 @@ router.get('/post/:id', postController.post)
 
 // edit post
 router.route('/post/edit/:id')
-.get(isAuthed, postController.post_edit_get)
+.get(postController.isAuthed, postController.post_edit_get)
 .post(postController.post_edit_post)
 
 // get delete post
 router.route('/post/delete/:id')
-.get(isAuthed, postController.post_delete_get)
+.get(postController.isAuthed, postController.post_delete_get)
 .post(postController.post_delete_post)
 
 // API
@@ -38,15 +38,5 @@ router.route('/api/post/:id')
 .get(postController.detail)
 .put(postController.post_edit_post)
 .delete(postController.post_delete_post)
-
-// check authentication
-function isAuthed(req, res, next){
-  if (req.isAuthenticated()){
-    return next()
-  } else {
-    req.flash('danger', 'Login required.')
-    res.redirect('/user/login')
-  }
-}
 
 module.exports = router

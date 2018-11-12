@@ -15,8 +15,7 @@ const Keys = require('./config/keys')
 const helmet = require('helmet')
 const compression = require('compression')
 
-// mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
-mongoose.connect('mongodb://mongo:27017/nodeDB', { useNewUrlParser: true })
+mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
 let db = mongoose.connection
 
 // check connection
