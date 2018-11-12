@@ -20,8 +20,8 @@ router.get('/register', (req, res) => {
 router.post('/register', [
   body('username', 'Username must not be empty.').isLength({ min: 1 }).trim(),
   body('email', 'Email must not be empty.').isEmail().trim(),
-  body('password', 'Password must not be empty.').isLength({ min: 6 }).trim(),
-  body('password2', 'Confirm password must not be empty.').isLength({ min: 6 }).trim()
+  body('password', 'Password should be at least 8 char or digits.').isLength({ min: 8 }).trim(),
+  body('password2', 'Confirm password should be at least 8 char or digits.').trim()
   .custom((value, { req }) => {
   if (value !== req.body.password) {
     throw new Error('Confirm password does not match password')
@@ -47,15 +47,18 @@ router.post('/register', [
   } else {
     try {
       let email = await User.findOne({email:req.body.email})
-      if (email) {return res.send("This email has been used.")}
+      if (email) {
+        return res.send("This email has been used.")
+      }
 
       let username = await User.findOne({username:req.body.username})
-      if (username) {return res.send("This username has been used.")}
-
+      if (username) {
+        return res.send("This username has been used.")
+      }
       let salt = await bcrypt.genSalt(10)
       let hash = await bcrypt.hash(user.password, salt)
-      user.password = await hash
-      await user.save()
+      user.password = hash
+      user.save()
       req.flash('success','You are now registered and can log in')
       res.redirect('/user/login')
     } catch (err) {
@@ -70,13 +73,13 @@ router.get('/login', (req, res) => {
 })
 
 // Login Process
-router.post('/login', function(req, res, next){
+router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
     successRedirect:'/',
     failureRedirect:'/user/login',
     failureFlash: true
-  })(req, res, next);
-});
+  })(req, res, next)
+})
 
 // logout
 router.get('/logout', (req, res) => {

@@ -36,15 +36,10 @@ body
           li
             a.nav-item.nav-link.active(href='/user/register')
               Strong| Sign up
-
-  .jumbotron.jumbotron-fluid.bg-info.text-white.text-center
-    .container
-      h1.display-5 Welcome to the poster board
-      p.lead Create an account and post something to share with others
+  br  
   .container
     .row
       .col-md-4
-        br
         != messages ('message', locals)
         if errors
           each error in errors
@@ -55,27 +50,7 @@ body
           
 br
 footer.text-muted
-  .container
-    nav.nav.nav-pills.flex-column.flex-md-row.justify-content-center
-      a.nav-link.active(href='https://www.cakeresume.com/s--kehXRV0AVI2rqegA4pGiNQ--/wei-yu-liao' data-toggler='tab') Cake Resume
-      a.nav-link(href='https://github.com/wyliao76/Blog' data-toggler='tab') GitHub
-      a.nav-link(href='#about' data-toggle='tab') About the author
-      a.nav-link(href='#home' data-toggle='tab') Home
-    .tab-content.py-5
-      .tab-pane.active(id="about")
-        h3 About
-        p My name is Will Liao.
-      .tab-pane(id="home")
-        h3 Home
-        p
-          | You are at 
-          span.text-info(data-toggle='tooltip' title='This is a tooltip') my 
-          | home
-    button.btn.btn-secondary(type='button' data-toggle='tooltip' data-placement='top' title='Tooltip on top')
-      | Tooltip on top
-    p.float-right
-      a(href='/') Back to top
-    p.text-center &copy; 2018, Will Liao
+  p.text-center &copy; 2018, Will Liao
 
 script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous')
 script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js' integrity='sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49' crossorigin='anonymous')
