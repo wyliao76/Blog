@@ -7,7 +7,7 @@ const passport = require('passport')
 passport.use(new GitHubStrategy({
     clientID: Keys.GITHUB_CLIENT_ID,
     clientSecret: Keys.GITHUB_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/github/callback"
+    callbackURL: "https://polar-dawn-14216.herokuapp.com/auth/github/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
