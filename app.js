@@ -6,7 +6,7 @@ const userRouter = require('./routes/users')
 const authRouter = require('./routes/auth')
 const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
-const flash = require('connect-flash-plus')
+const flash = require('connect-flash')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const RedisStore = require('connect-redis')(session)
@@ -14,8 +14,9 @@ const passport = require('passport')
 const Keys = require('./config/keys')
 const helmet = require('helmet')
 const compression = require('compression')
+require('dotenv').config()
 
-mongoose.connect('mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1/nodeDB', { useNewUrlParser: true })
 let db = mongoose.connection
 
 // check connection
@@ -58,7 +59,7 @@ app.use(session({
 }))
 
 // flash
-app.use(flash());
+app.use(flash())
 app.use((req, res, next) => {
   res.locals.messages = require('express-messages')(req, res)
   next()
@@ -71,7 +72,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.get('*', (req, res, next) => {
-  res.locals.user = req.user || null
+  res.locals.user = req.user || ''
   next()
 })
 

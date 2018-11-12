@@ -7,11 +7,14 @@ const { sanitizeBody } = require('express-validator/filter')
 
 
 // get index
-exports.index = async (req, res)=>{
+exports.index = async (req, res) => {
   try {
     let posts = await Post.find({})
-    if (!posts) {
-      return res.status(404).send('No posts!')
+    if (posts.length == 0) {
+      req.flash('danger', 'There is no posts!')
+      res.render('index', {
+        posts: posts,
+      })
     } else {
       res.render('index', {
         posts: posts,
@@ -23,11 +26,9 @@ exports.index = async (req, res)=>{
 }
 
 // get create post
-exports.post_create_get = async (req, res)=>{
+exports.post_create_get = async (req, res) => {
   try {
-    res.render('post_create', {
-      title:'Create a post'
-    })
+    res.render('post_create')
   } catch (err) {
     res.send(err)
   }
@@ -40,38 +41,34 @@ body('body', 'body must not be empty.').isLength({ min: 1 }).trim(),
 
 // I don't know how to decode the sanitized data
 // sanitizeBody('*').escape(),
- async (req, res)=>{
-  let errors = validationResult(req)
-
-  if (!errors.isEmpty()) {
-    res.render('post_create', {post:post, errors: errors.array()})
-  } else {
+async (req, res) => {
   try {
-    let post = await new Post({
+    let errors = await validationResult(req)
+    let post = new Post({
       title: req.body.title,
       author: req.user._id,
       body: req.body.body,
       date: new Date()
-    })
-    await post.save()
-    req.flash('success', 'Create post successful!')
-    res.status(200).redirect('/')
+      })
+    if (!errors.isEmpty()) {
+      return res.render('post_create', {post:post, errors: errors.array()})
+    } else {
+        post.save()
+        req.flash('success', 'Create post successful!')
+        res.status(200).redirect('/')
+      }
   } catch (err) {
-    res.json({err:err.message})
+    console.log(err)
   }
-}
 }]
 
 // get a single post
-exports.post = async (req, res)=>{
+exports.post = async (req, res) => {
   try {
     let post = await Post.findOne({_id:req.params.id})
     let author = await User.findOne({_id:post.author})
     if (!author) {
       author = await UserOauth.findOne({_id:post.author})
-    }
-    if (!post) {
-      return res.status(404).send('No posts!')
     } else {
       res.render('post', {
         post: post,
@@ -84,18 +81,14 @@ exports.post = async (req, res)=>{
 }
 
 // get edit post
-exports.post_edit_get = async (req, res)=>{
+exports.post_edit_get = async (req, res) => {
   try {
     let post = await Post.findOne({_id:req.params.id})
     if (post.author != req.user._id){
       req.flash('danger', 'Hey you cannot go there!')
-       return res.redirect('/')
-    }
-    if (!post) {
-      return res.status(404).send('No posts!')
-  } else {
+      return res.redirect('/')
+    } else {
     res.render('post_edit', {
-      title:'Edit this post:',
       post: post
     })
   }
@@ -111,35 +104,35 @@ body('body', 'body must not be empty.').isLength({ min: 1 }).trim(),
 
 // I don't know how to decode the sanitized data
 // sanitizeBody('*').escape(),
-async (req, res, next)=>{
-  let errors = validationResult(req);
-  let post = new Post({
-    title: req.body.title,
-    author: req.body.author,
-    body: req.body.body,
-    date: new Date(),
-    _id: req.params.id,
-  })
-  if (!errors.isEmpty()) {
-      res.render('post_edit', {post:post, errors: errors.array()})
-    } else {
+async (req, res) => {
   try {
-    await Post.findOneAndUpdate({_id:req.params.id}, post)
-    req.flash('success', 'Update post successful!')
-    res.status(201).redirect('/')
+    let errors = await validationResult(req);
+    let post = new Post({
+      title: req.body.title,
+      author: req.body.author,
+      body: req.body.body,
+      date: new Date(),
+      _id: req.params.id,
+    })
+    if (!errors.isEmpty()) {
+        res.render('post_edit', {post:post, user:req.user, errors: errors.array()})
+      } else {
+      await Post.findOneAndUpdate({_id:req.params.id}, post)
+      req.flash('success', 'Update post successful!')
+      res.redirect('/')
+    }
   } catch (err) {
     res.send(err)
   }
-}
 }]
 
 // get delete post
-exports.post_delete_get = async (req, res)=>{
+exports.post_delete_get = async (req, res) => {
   try {
     let post = await Post.findOne({_id:req.params.id})
     if (post.author != req.user._id){
       req.flash('danger', 'Hey you cannot go there!')
-       return res.redirect('/')
+      return res.redirect('/')
     }
     res.render('post_delete', {
       post: post,
@@ -150,7 +143,7 @@ exports.post_delete_get = async (req, res)=>{
 }
 
 // post delete post
-exports.post_delete_post = async (req, res)=>{
+exports.post_delete_post = async (req, res) => {
   try {
     await Post.findOneAndDelete({_id:req.params.id})
     req.flash('success', 'Post deleted!')
@@ -165,10 +158,10 @@ exports.post_delete_post = async (req, res)=>{
 exports.posts = async (req, res) => {
   try {
     let posts = await Post.find({})
-    if (!posts) {
+    if (posts.length == 0) {
       return res.status(404).send('No posts!')
     }
-    res.send(posts)
+    res.json(posts)
   } catch (err) {
     res.send(err)
   }
@@ -179,10 +172,7 @@ exports.posts = async (req, res) => {
 exports.detail = async (req, res) => {
   try {
     let post = await Post.findOne({_id:req.params.id})
-    if (!post) {
-      return res.status(404).send('No posts!')
-    }
-    res.send(post)
+    res.json(post)
   } catch (err) {
     res.send(err)
   }
