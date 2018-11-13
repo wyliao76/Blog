@@ -6,3 +6,7 @@ block content
     h4 User name: #{user.username}
     h4 Email: #{user.email}
     h4 Name: #{user.firstName} #{user.lastName}
+    br
+    if user
+      a.btn.btn-primary(href='/user/profile/update') Update profile
+      

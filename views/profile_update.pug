@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  .col-md-4
+    h1 Update profile
+    form(method='POST', action='')
+      #form-group
+        label Username:
+        input.form-control(name='username', type='text' value=(undefined===user ? '' : user.username))
+      #form-group
+        label Email:
+        input.form-control(name='email', type='text' value=(undefined===user ? '' : user.email))
+      #form-group
+        label First Name:
+        input.form-control(name='firstName', type='text' value=(undefined===user ? '' : user.firstName))
+      #form-group
+        label Last Name:
+        input.form-control(name='lastName', type='text' value=(undefined===user ? '' : user.lastName))
+      #form-group
+        label Portrait:
+        input.form-control(name='portrait', type='text' value=(undefined===user ? '' : user.portrait))
+      br
+      input.btn.btn-primary(type='submit', value='submit')

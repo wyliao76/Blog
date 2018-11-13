@@ -7,7 +7,7 @@ const passport = require('passport')
 passport.use(new GoogleStrategy({
     clientID: Keys.GOOGLE_CLIENT_ID,
     clientSecret: Keys.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://polar-dawn-14216.herokuapp.com/auth/google/callback"
+    callbackURL: "http://localhost:3000/auth/google/callback"
   },
   async (accessToken, refreshToken, profile, done) => {
     try {

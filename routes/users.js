@@ -7,6 +7,7 @@ const passport = require('passport')
 
 // load model
 let User = require('../models/user')
+let UserOauth = require('../models/user_oauth')
 
 // load controller
 let postController = require('../controllers/postController')
@@ -88,9 +89,50 @@ router.get('/logout', (req, res) => {
   res.redirect('/user/login')
 })
 
-router.get('/profile', postController.isAuthed, async (req, res) => {
+// get profile
+router.get('/profile', postController.isAuthed, (req, res) => {
   try {
     res.render('profile', {user:req.user})
+  } catch (err) {
+    res.send(err)
+  }
+})
+
+// get update profile
+router.get('/profile/update', postController.isAuthed, (req, res) => {
+  try {
+    res.render('profile_update', {user:req.user})
+  } catch (err) {
+    res.send(err)
+  }
+})
+
+// post update profile
+router.post('/profile/update',[
+  body('username', 'Username must not be empty.').isLength({ min: 1 }).trim(),
+  body('email', 'Email must not be empty.').isEmail().trim(),
+  body('firstName', 'First name must not be empty.').isLength({ min: 1 }).trim(),
+  body('lastName', 'Last name must not be empty.').isLength({ min: 1 }).trim(),
+  body('portrait').trim(),
+], async (req, res) => {
+  try {
+    let errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.render('profile_update', {user:user, errors:errors.array()})
+    } else {
+      let user = await User.findOne({_id:req.user.id})
+      if (!user) {
+        user = await UserOauth.findOne({_id:req.user.id})
+      }
+      user.username = req.body.username
+      user.email = req.body.email
+      user.firstName = req.body.firstName
+      user.lastName = req.body.lastName
+      user.portrait = req.body.portrait
+      user.save()
+      req.flash('success', 'Profile updated!')
+      res.redirect('/user/profile')
+    }
   } catch (err) {
     res.send(err)
   }
