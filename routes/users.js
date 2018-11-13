@@ -4,6 +4,9 @@ const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
+const multer  = require('multer')
+const upload = multer({ dest: './public/image' })
+const path = require('path')
 
 // load model
 let User = require('../models/user')
@@ -113,7 +116,6 @@ router.post('/profile/update',[
   body('email', 'Email must not be empty.').isEmail().trim(),
   body('firstName', 'First name must not be empty.').isLength({ min: 1 }).trim(),
   body('lastName', 'Last name must not be empty.').isLength({ min: 1 }).trim(),
-  body('portrait').trim(),
 ], async (req, res) => {
   try {
     let errors = validationResult(req)
@@ -128,11 +130,35 @@ router.post('/profile/update',[
       user.email = req.body.email
       user.firstName = req.body.firstName
       user.lastName = req.body.lastName
-      user.portrait = req.body.portrait
       user.save()
       req.flash('success', 'Profile updated!')
       res.redirect('/user/profile')
     }
+  } catch (err) {
+    res.send(err)
+  }
+})
+
+// get portrait update
+router.get('/profile/portrait_update', postController.isAuthed, (req, res) => {
+  try {
+    res.render('portrait_update', {user:req.user})
+  } catch (err) {
+    res.send(err)
+  }
+})
+
+// post portrait update
+router.post('/profile/portrait_update', upload.single('portrait'), async (req, res) => {
+  try {
+    let user = await User.findOne({_id:req.user.id})
+    if (!user) {
+      user = await UserOauth.findOne({_id:req.user.id})
+    }
+    user.portrait = path.join('/image', req.file.filename)
+    user.save()
+    req.flash('success', 'file uploaded!')
+    res.redirect('/user/profile')
   } catch (err) {
     res.send(err)
   }

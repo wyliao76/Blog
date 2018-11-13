@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  .col-md-4
+    h1 Update portrait
+    form(method='POST', action='', enctype="multipart/form-data")
+      #form-group
+        label Portrait:
+        input(name='portrait', type='file')
+
+      br
+      input.btn.btn-primary(type='submit', value='submit')
