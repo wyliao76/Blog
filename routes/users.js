@@ -5,7 +5,6 @@ const { sanitizeBody } = require('express-validator/filter')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
 const multer  = require('multer')
-const upload = multer({ dest: './public/image' })
 const path = require('path')
 
 // load model
@@ -148,6 +147,17 @@ router.get('/profile/portrait_update', postController.isAuthed, (req, res) => {
   }
 })
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/upload')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname.split('.')[0] + '-' + Date.now() + '.' + file.originalname.split('.')[1])
+  }
+})
+
+const upload = multer({ storage: storage })
+
 // post portrait update
 router.post('/profile/portrait_update', upload.single('portrait'), async (req, res) => {
   try {
@@ -155,7 +165,7 @@ router.post('/profile/portrait_update', upload.single('portrait'), async (req, r
     if (!user) {
       user = await UserOauth.findOne({_id:req.user.id})
     }
-    user.portrait = path.join('/image', req.file.filename)
+    user.portrait = path.join('/upload', req.file.filename)
     user.save()
     req.flash('success', 'file uploaded!')
     res.redirect('/user/profile')
