@@ -5,6 +5,9 @@ const { sanitizeBody } = require('express-validator/filter')
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
 const multer  = require('multer')
+const multerS3  = require('multer-s3')
+const aws = require('aws-sdk')
+const Keys = require('./keys')
 const path = require('path')
 
 // load model
@@ -147,6 +150,7 @@ router.get('/profile/portrait_update', postController.isAuthed, (req, res) => {
   }
 })
 
+// diskStorage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, './public/upload')
@@ -155,8 +159,29 @@ const storage = multer.diskStorage({
     cb(null, file.originalname.split('.')[0] + '-' + Date.now() + '.' + file.originalname.split('.')[1])
   }
 })
+const uploadDisk = multer({ storage: storage })
 
-const upload = multer({ storage: storage })
+// AWS S3
+aws.config.update({
+    secretAccessKey: Keys.S3secretAccessKey ,
+    accessKeyId: Keys.S3accessKeyId,
+    region: 'Asia-Pacific'
+})
+const s3 = new aws.S3()
+
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'wyliao76-blog-bucket',
+    acl: 'public-read',
+    metadata: (req, file, cb) => {
+      cb(null, {fieldName: file.originalname.split('.')[0] + '-' + Date.now() + '.' + file.originalname.split('.')[1]})
+    },
+    key: (req, file, cb) => {
+      cb(null, Date.now().toString())
+    }
+  })
+})
 
 // post portrait update
 router.post('/profile/portrait_update', upload.single('portrait'), async (req, res) => {
