@@ -7,7 +7,7 @@ const passport = require('passport')
 const multer  = require('multer')
 const multerS3  = require('multer-s3')
 const aws = require('aws-sdk')
-const Keys = require('./keys')
+const Keys = require('../config/keys')
 const path = require('path')
 
 // load model
@@ -163,9 +163,10 @@ const uploadDisk = multer({ storage: storage })
 
 // AWS S3
 aws.config.update({
-    secretAccessKey: Keys.S3secretAccessKey ,
     accessKeyId: Keys.S3accessKeyId,
-    region: 'Asia-Pacific'
+    secretAccessKey: Keys.S3secretAccessKey,
+    region: 'ap-southeast-1',
+    signatureVersion: 'v4',
 })
 const s3 = new aws.S3()
 
@@ -173,12 +174,11 @@ const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: 'wyliao76-blog-bucket',
-    acl: 'public-read',
     metadata: (req, file, cb) => {
-      cb(null, {fieldName: file.originalname.split('.')[0] + '-' + Date.now() + '.' + file.originalname.split('.')[1]})
+      cb(null, {fieldName: file.fieldname})
     },
     key: (req, file, cb) => {
-      cb(null, Date.now().toString())
+      cb(null, file.originalname.split('.')[0] + '-' + Date.now() + '.' + file.originalname.split('.')[1])
     }
   })
 })
@@ -190,7 +190,8 @@ router.post('/profile/portrait_update', upload.single('portrait'), async (req, r
     if (!user) {
       user = await UserOauth.findOne({_id:req.user.id})
     }
-    user.portrait = path.join('/upload', req.file.filename)
+    // user.portrait = path.join('/upload', req.file.filename)
+    user.portrait = req.file.location
     user.save()
     req.flash('success', 'file uploaded!')
     res.redirect('/user/profile')
